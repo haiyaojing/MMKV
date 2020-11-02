@@ -7,7 +7,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
             }
         }
         // ndk doesn't have targetSDK support
@@ -15,19 +15,17 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             externalNativeBuild {
                 cmake {
-                    cppFlags "-fvisibility=hidden", "-funwind-tables", "-fasynchronous-unwind-tables"
+                    cppFlags "-O2", "-fvisibility=hidden", "-funwind-tables", "-fasynchronous-unwind-tables"
                 }
             }
             consumerProguardFiles 'proguard-rules.pro'
 //            debuggable true
 //            jniDebuggable true
         }
-        debug {
-            jniDebuggable true
-        }
+
     }
     externalNativeBuild {
         cmake {

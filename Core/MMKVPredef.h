@@ -26,7 +26,6 @@
 
 // using POSIX implementation
 //#define FORCE_POSIX
-
 #ifdef __cplusplus
 
 #include <string>

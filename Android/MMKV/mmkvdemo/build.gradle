@@ -46,6 +46,16 @@ android {
         StaticCpp.dimension = "stl_mode"
         SharedCpp.dimension = "stl_mode"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dependenciesInfo {
+        includeInApk false
+        includeInBundle false
+    }
+    ndkVersion '21.1.6352462'
+    buildToolsVersion '30.0.2'
 
     /*splits {
         // Configures multiple APKs based on ABI.

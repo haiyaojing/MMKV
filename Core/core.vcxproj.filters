@@ -63,6 +63,9 @@
     <ClCompile Include="KeyValueHolder.cpp" />
     <ClCompile Include="CodedInputDataCrypt.cpp" />
     <ClCompile Include="MMKV_IO.cpp" />
+    <ClCompile Include="native-bridge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CodedInputData.h">

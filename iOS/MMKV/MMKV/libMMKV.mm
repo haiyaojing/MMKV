@@ -114,6 +114,15 @@ static BOOL g_hasCalledInitializeMMKV = NO;
     return ret;
 }
 
++ (instancetype)getInstance:(const char*)mapId {
+    if (!mapId) return [MMKV defaultMMKV];
+    
+    NSString* pMapId = [NSString stringWithUTF8String:mapId];
+    if (pMapId.length <= 0) return [MMKV defaultMMKV];
+    
+    return [MMKV mmkvWithID:pMapId];
+}
+
 // a generic purpose instance
 + (instancetype)defaultMMKV {
     return [MMKV mmkvWithID:(@"" DEFAULT_MMAP_ID) cryptKey:nil rootPath:nil mode:MMKVSingleProcess];
@@ -790,3 +799,274 @@ static void ContentChangeHandler(const string &mmapID) {
         [g_callbackHandler onMMKVContentChange:[NSString stringWithUTF8String:mmapID.c_str()]];
     }
 }
+
+
+MMKV* getInstance(const char* mapId)
+{
+    NSString* pMapId = [NSString stringWithUTF8String:mapId];
+    if (pMapId != nil && pMapId.length > 0)
+    {
+        return [MMKV mmkvWithID:pMapId];
+    }
+    return [MMKV defaultMMKV];
+}
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+void __init(const char* path, int level)
+{
+    NSString* root = [NSString stringWithUTF8String:path];
+    
+    [MMKV initializeMMKV:root logLevel:(MMKVLogLevel)level];
+}
+
+void __encodeString(const char* mapId, const char* key, const char* value)
+{
+    MMKV* mmkv = [MMKV getInstance:mapId];
+    NSString* pKey = [NSString stringWithUTF8String:key];
+    NSString* pValue = [NSString stringWithUTF8String:value];
+    if (mmkv != nil)
+    {
+        [mmkv setString:pValue forKey:pKey];
+    }
+}
+
+const char* __decodeString(const char* mapId, const char* key)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSString* pKey = [NSString stringWithUTF8String:key];
+        auto value = [mmkv getStringForKey:pKey];
+        if (value == nil)
+        {
+            return nullptr;
+        }
+        return [value cStringUsingEncoding:NSUTF8StringEncoding];
+    }
+    return nullptr;
+}
+
+void __encodeBool(const char* mapId, const char* key, const bool value)
+{
+    MMKV* mmkv = [MMKV getInstance:mapId];
+    NSString* pKey = [NSString stringWithUTF8String:key];
+    if (mmkv != nil)
+    {
+        [mmkv setBool:value forKey:pKey];
+    }
+}
+
+bool __decodeBool(const char* mapId, const char* key, const bool defaultValue)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSString* pKey = [NSString stringWithUTF8String:key];
+        return [mmkv getBoolForKey:pKey defaultValue:defaultValue];
+    }
+    return defaultValue;
+}
+
+void __encodeInt(const char* mapId, const char* key, const int value)
+{
+    MMKV* mmkv = [MMKV getInstance:mapId];
+    NSString* pKey = [NSString stringWithUTF8String:key];
+    if (mmkv != nil)
+    {
+        [mmkv setInt32:value forKey:pKey];
+    }
+}
+
+int32_t __decodeInt(const char* mapId, const char* key, const int32_t defaultValue)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSString* pKey = [NSString stringWithUTF8String:key];
+        return [mmkv getInt32ForKey:pKey defaultValue:defaultValue];
+    }
+    return defaultValue;
+}
+
+void __encodeLong(const char* mapId, const char* key, const long value)
+{
+    MMKV* mmkv = [MMKV getInstance:mapId];
+    NSString* pKey = [NSString stringWithUTF8String:key];
+    if (mmkv != nil)
+    {
+        [mmkv setInt64:value forKey:pKey];
+    }
+}
+
+int64_t __decodeLong(const char* mapId, const char* key, const int64_t defaultValue)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSString* pKey = [NSString stringWithUTF8String:key];
+        return [mmkv getInt64ForKey:pKey defaultValue:defaultValue];
+    }
+    return defaultValue;
+}
+
+void __encodeFloat(const char* mapId, const char* key, const float value)
+{
+    MMKV* mmkv = [MMKV getInstance:mapId];
+    NSString* pKey = [NSString stringWithUTF8String:key];
+    if (mmkv != nil)
+    {
+        [mmkv setFloat:value forKey:pKey];
+    }
+}
+
+float __decodeFloat(const char* mapId, const char* key, const float defaultValue)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSString* pKey = [NSString stringWithUTF8String:key];
+        return [mmkv getFloatForKey:pKey defaultValue:defaultValue];
+    }
+    return defaultValue;
+}
+
+void __encodeDouble(const char* mapId, const char* key, const double value)
+{
+    MMKV* mmkv = [MMKV getInstance:mapId];
+    NSString* pKey = [NSString stringWithUTF8String:key];
+    if (mmkv != nil)
+    {
+        [mmkv setDouble:value forKey:pKey];
+    }
+}
+
+double __decodeDouble(const char* mapId, const char* key, const double defaultValue)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSString* pKey = [NSString stringWithUTF8String:key];
+        return [mmkv getDoubleForKey:pKey defaultValue:defaultValue];
+    }
+    return defaultValue;
+}
+
+size_t __totalSize(const char* mapId)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        return [mmkv totalSize];
+    }
+    return 0;
+}
+
+size_t __actualSize(const char* mapId)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        return [mmkv actualSize];
+    }
+    return 0;
+}
+
+void __removeValueForKey(const char* mapId, const char* key)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSString* pKey = [NSString stringWithUTF8String:key];
+        [mmkv removeValueForKey:pKey];
+    }
+}
+
+void __removeValuesForKeys(const char* mapId, const char** keys, const int size)
+{
+    if (keys == nullptr)
+    {
+        return;
+    }
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSMutableArray* array = [NSMutableArray array];
+        for (int i = 0; i < size; i++) {
+            NSString* str = [NSString stringWithUTF8String:keys[i]];
+            [array addObject:str];
+        }
+        
+        [mmkv removeValuesForKeys:array];
+    }
+}
+
+bool __containsKey(const char* mapId, const char* key)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSString* pKey = [NSString stringWithUTF8String:key];
+        return [mmkv containsKey:pKey];
+    }
+    
+    return false;
+}
+
+const char* __getAllKey(const char* mapId)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        NSArray* array = [mmkv allKeys];
+              
+        NSString* result = [array componentsJoinedByString:@","];
+        
+        return [result cStringUsingEncoding:NSUTF8StringEncoding];
+    }
+    
+    return nullptr;
+}
+
+void __sync(const char* mapId)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        [mmkv sync];
+    }
+}
+
+void __async(const char* mapId)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        [mmkv async];
+    }
+}
+
+void __clearAll(const char* mapId)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        [mmkv clearAll];
+    }
+}
+
+void __close(const char* mapId)
+{
+    auto mmkv = [MMKV getInstance:mapId];
+    if (mmkv != nil)
+    {
+        [mmkv close];
+    }
+}
+
+
+#if defined(__cplusplus)
+}
+#endif

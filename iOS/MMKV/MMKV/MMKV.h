@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// @return root dir of MMKV
 + (NSString *)initializeMMKV:(nullable NSString *)rootDir groupDir:(NSString *)groupDir logLevel:(MMKVLogLevel)logLevel NS_SWIFT_NAME(initialize(rootDir:groupDir:logLevel:));
 
++ (nullable instancetype)getInstance:(const char*)mapId;
+
 /// a generic purpose instance (in MMKVSingleProcess mode)
 + (nullable instancetype)defaultMMKV;
 

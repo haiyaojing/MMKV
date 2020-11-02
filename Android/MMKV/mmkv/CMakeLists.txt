@@ -22,7 +22,8 @@ add_library( mmkv
              SHARED
 
              # Provides a relative path to your source file(s).
-             src/main/cpp/native-bridge.cpp
+        ../../../Core/native-bridge.cpp
+        ../../../Core/native-bridge.h
         )
 
 set_target_properties(mmkv PROPERTIES
